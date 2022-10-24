@@ -5,22 +5,20 @@ import java.net.Socket;
 
 public class ServerThread extends Thread {
 
-	private Server server;
+	private ServerHandler server;
 	private Socket socket;
 
 	public ServerThread(Socket socket) throws IOException {
 		super();
 		this.socket = socket;
-		this.server = new Server(socket);
-		ServerMain.connections.add(this);
-		
+		this.server = new ServerHandler(socket);
 	}
 	
-	public void sendDataToClient(String data) {
+	public void send(String data) {
 		server.sendDataToClient(data);
 	}
 	
-	public String readDataFromClient() {
+	public String read() {
 		return server.readDataFromClient();
 	}
 	
@@ -28,16 +26,14 @@ public class ServerThread extends Thread {
 		return server.getSocket();
 	}
 	
-	public void refreshServer(Server server) {
-		this.server = server;
-	}
-
 	@Override
 	public void run() {
 		try {
 				
-				new PrintReceivedDataFromClientThread(this).start();
-				//new SendDataToClientThread(this).start();
+				while (true) {
+					//this.server = new ServerHandler(socket);
+					//read();
+				}
 				
 		} catch (Exception e) {			
 			e.printStackTrace();

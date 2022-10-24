@@ -8,14 +8,14 @@ import java.net.Socket;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-public class Server {
+public class ServerHandler {
 
 	private Socket socket;
 	private BufferedReader readerData;
 	private PrintWriter senderData;
 	private Scanner scanner;
 
-	public Server(Socket socket) {
+	public ServerHandler(Socket socket) {
 		try {
 			this.socket = socket;
 			readerData = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -34,6 +34,7 @@ public class Server {
 	public String readDataFromClient() {
 
 		try {
+			
 			String response = readerData.readLine();
 			System.out.println(response);
 			return response;

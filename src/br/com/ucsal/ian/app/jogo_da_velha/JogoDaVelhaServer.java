@@ -1,7 +1,5 @@
 package br.com.ucsal.ian.app.jogo_da_velha;
 
-import static br.com.ucsal.ian.app.jogo_da_velha.util.Message.WAIT_THE_SECOND_PLAYER;
-import static br.com.ucsal.ian.util.SocketConstants.DISABLE_KEYBOARD;
 import static br.com.ucsal.ian.util.SocketConstants.ENABLE_KEYBOARD;
 
 import br.com.ucsal.ian.server.ServerMain;
@@ -16,6 +14,7 @@ public class JogoDaVelhaServer extends Thread {
 
 	private boolean finish1 = false;
 	private boolean finish2 = false;
+	
 
 	public JogoDaVelhaServer() {
 		this.finish1 = false;
@@ -26,58 +25,31 @@ public class JogoDaVelhaServer extends Thread {
 	@Override
 	public void run() {
 		while (true) {
-			boolean justOnePlayer = ServerMain.connections.size() > 0;
-			boolean hasTwoPlayers = ServerMain.connections.size() > 1;
+			boolean justOnePlayer = ServerMain.threads.size() > 0;
+			boolean hasTwoPlayers = ServerMain.threads.size() > 1;
 
 			if (!finish1) {
 
-				if (justOnePlayer) {
-					ServerThread player1 = ServerMain.connections.get(PLAYER_1);
-
 					if (hasTwoPlayers) {
-						ServerThread player2 = ServerMain.connections.get(PLAYER_2);
+						ServerThread player1 = ServerMain.threads.get(PLAYER_1);
+						ServerThread player2 = ServerMain.threads.get(PLAYER_2);
 
-						player1.sendDataToClient("Suceesso");
-						player1.sendDataToClient("zzzzz");
-						player1.sendDataToClient("qqqqqqqq");
-						player1.sendDataToClient(ENABLE_KEYBOARD);
-						player2.sendDataToClient("oi");
+						new JogoDaVelha(player1, player2).run();
 
-						finish1 = true;
-
+					}else {
+						System.out.println("esperando segundo jogador... \n total de jogadore: "+ServerMain.threads.size());
+						try {
+							Thread.sleep(1000);
+						} catch (InterruptedException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 					}
-				}
+
 			}
 
 		}
 
-	}
-
-	private boolean firstPlayersTurn() {
-
-		/*
-		 * secondPlayer.sendDataToClient(WAIT_THE_FIRST_PLAYER);
-		 * secondPlayer.sendDataToClient(DISABLE_KEYBOARD);
-		 * firtPlayer.sendDataToClient(ENABLE_KEYBOARD);
-		 */
-
-		// player.sendDataToClient("Suceesso");
-		// player.sendDataToClient("zzzzz");
-		// player.sendDataToClient("qqqqqqqq");
-
-		return true;
-
-	}
-
-	private boolean secondPlayersTurn() {
-
-		// player.sendDataToClient(WAIT_THE_SECOND_PLAYER);
-		// player.sendDataToClient(DISABLE_KEYBOARD);
-
-		// secondPlayer.sendDataToClient(ENABLE_KEYBOARD);
-		;
-
-		return false;
 	}
 
 }

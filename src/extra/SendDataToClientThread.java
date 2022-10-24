@@ -1,6 +1,7 @@
-package br.com.ucsal.ian.server;
+package extra;
 
 import br.com.ucsal.ian.client.Client;
+import br.com.ucsal.ian.server.ServerThread;
 import br.com.ucsal.ian.util.SocketConstants;
 
 public class SendDataToClientThread extends Thread{

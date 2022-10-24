@@ -26,7 +26,33 @@ public class Client {
 		}	
 	}
 	
-	public String readDataFromServer() {
+	public void send(boolean canRead) {
+		
+		
+		
+		if(canRead) {			
+			sendDataToServerByKeyBoard();
+		} else {
+			scanner = null;
+		}
+		
+		
+	}
+	
+	public String read() {
+
+		try {
+			String serverData = readDataFromServer();
+			System.out.println(serverData);
+			return serverData;
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		return null;
+	}
+	
+	private String readDataFromServer() {
 		try {
 			String response = readerData.readLine();
 	        return response;
@@ -39,14 +65,13 @@ public class Client {
 		
 	}
 
-	public String sendDataToServerByKeyBoard() {
+	private String sendDataToServerByKeyBoard() {
 
 		scanner = new Scanner(System.in);
-
-		
 		String msg = scanner.nextLine();	
 		senderData.println(msg);
-	
+		
+		
 		return msg;			
 	}
 	

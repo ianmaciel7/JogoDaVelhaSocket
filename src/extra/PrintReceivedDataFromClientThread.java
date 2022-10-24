@@ -1,6 +1,9 @@
-package br.com.ucsal.ian.server;
+package extra;
 
 import java.net.Socket;
+
+import br.com.ucsal.ian.server.ServerHandler;
+import br.com.ucsal.ian.server.ServerThread;
 
 public class PrintReceivedDataFromClientThread extends Thread {
 
@@ -13,8 +16,8 @@ public class PrintReceivedDataFromClientThread extends Thread {
 	@Override
 	public void run() {
 		while (true) {
-			serverThread.refreshServer(new Server(serverThread.getSocket()));
-			String serverData = serverThread.readDataFromClient();
+			//serverThread.refreshServer(new ServerHandler(serverThread.getSocket()));
+			String serverData = serverThread.read();
 			System.out.println(serverData);
 
 		}
