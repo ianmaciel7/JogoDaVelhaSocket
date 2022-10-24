@@ -8,24 +8,39 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
+import br.com.ucsal.ian.server.ServerMain;
 import br.com.ucsal.ian.util.SocketConstants;
 
 public class ClientMain {
 
 	public static void main(String[] args) throws UnknownHostException, IOException {
 
+
 		Socket socket = new Socket(SocketConstants.HOST, SocketConstants.PORT);
-		
-		BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-		PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-		Scanner scanner = new Scanner(System.in);
-
-		new Thread(new ClientRunnable(socket)).start();
-
-		while (true) {
-			String msg = scanner.nextLine();
-			out.println(msg);
-		}
-
+		Client client = new Client(socket);
+				
+			while (true) {
+				String data = readData(client);
+				sendData(client, SocketConstants.ENABLE_KEYBOARD.trim().equalsIgnoreCase(data.trim()));								
+			}	
 	}
+	
+	
+	
+	private static void sendData(Client client,boolean canRead) {
+		if(canRead) {			
+			client.sendDataToServerByKeyBoard();
+		}
+	}
+	
+	private static String readData(Client client) {
+		if(client != null) {
+			String serverData = client.readDataFromServer();
+			System.out.println(serverData);
+			return serverData;
+		}
+		return null;
+	}
+
+	
 }

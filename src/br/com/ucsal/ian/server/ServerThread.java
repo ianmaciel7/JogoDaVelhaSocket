@@ -1,44 +1,48 @@
 package br.com.ucsal.ian.server;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.IOException;
 import java.net.Socket;
-import java.util.Arrays;
-import java.util.List;
 
 public class ServerThread extends Thread {
 
+	private Server server;
 	private Socket socket;
-	private PrintWriter out;
-	private List<String> msgs;
-	
-	
-	
-	public ServerThread(Socket socket,List<String> msgs) {
+
+	public ServerThread(Socket socket) throws IOException {
 		super();
 		this.socket = socket;
-		this.msgs = msgs;
+		this.server = new Server(socket);
+		ServerMain.connections.add(this);
+		
 	}
-
-
+	
+	public void sendDataToClient(String data) {
+		server.sendDataToClient(data);
+	}
+	
+	public String readDataFromClient() {
+		return server.readDataFromClient();
+	}
+	
+	public Socket getSocket() {
+		return server.getSocket();
+	}
+	
+	public void refreshServer(Server server) {
+		this.server = server;
+	}
 
 	@Override
 	public void run() {
 		try {
-			
-			BufferedReader in = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			out = new PrintWriter(socket.getOutputStream(),true);
-			while(true) {
-				String msg = in.readLine();
-				msgs.add(msg);
-				out.println(Arrays.toString(msgs.toArray()));	
-				System.out.println("cliente msg: "+msg);
-			}				
-		} catch (Exception e) {
+				
+				new PrintReceivedDataFromClientThread(this).start();
+				//new SendDataToClientThread(this).start();
+				
+		} catch (Exception e) {			
 			e.printStackTrace();
 		}
-		super.run();
 	}
 
+	
 }
