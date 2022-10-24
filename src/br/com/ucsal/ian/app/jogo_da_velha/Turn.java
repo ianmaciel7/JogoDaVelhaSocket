@@ -1,6 +1,7 @@
 package br.com.ucsal.ian.app.jogo_da_velha;
 
 import br.com.ucsal.ian.app.jogo_da_velha.util.Message;
+import br.com.ucsal.ian.server.ServerMain;
 import br.com.ucsal.ian.server.ServerThread;
 
 public class Turn {
@@ -31,8 +32,11 @@ public class Turn {
 		
 		
 		String data=player1.read();
-		if(data != null) {			
-			this.whoseTurnIsIt = Turns.SECOND_PLAYERS_TURN;
+		if(data != null) {	
+
+			ServerMain.setData(data, JogoDaVelha.PLAYER_1);
+			this.whoseTurnIsIt = Turns.SECOND_PLAYERS_TURN;		
+			broadcastMessage(new BoardBuilder(ServerMain.getData()).toString());		
 		}
 
 	}
@@ -52,6 +56,8 @@ public class Turn {
 		
 		if(data != null) {
 			this.whoseTurnIsIt = Turns.ENDED_TURN;
+			ServerMain.setData(data, JogoDaVelha.PLAYER_2);
+			broadcastMessage(new BoardBuilder(ServerMain.getData()).toString());
 		}
 	}
 
@@ -62,6 +68,12 @@ public class Turn {
 		this.whoseTurnIsIt = Turns.FIRST_PLAYERS_TURN;
 		
 	}
+	
+	private void broadcastMessage(String msg) {	
+		player1.println(msg);
+		player2.println(msg);	
+	}
+
 	
 	
 }
