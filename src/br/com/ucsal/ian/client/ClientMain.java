@@ -22,10 +22,11 @@ public class ClientMain {
 		Socket socket = new Socket(SocketConstants.HOST, SocketConstants.PORT);
 		
 		Client client = new Client(socket);
-				
+		
 			while (true) {
+				
 				String data = client.read();
-				client.send(SocketConstants.ENABLE_KEYBOARD.trim().equalsIgnoreCase(data.trim()));								
+				if(data != null) client.send(SocketConstants.ENABLE_KEYBOARD.trim().equalsIgnoreCase(data.trim()));								
 			}	
 	}
 	
