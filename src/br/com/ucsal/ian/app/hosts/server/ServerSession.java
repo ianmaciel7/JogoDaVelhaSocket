@@ -1,6 +1,7 @@
 package br.com.ucsal.ian.app.hosts.server;
 
-import java.net.ServerSocket;
+import static br.com.ucsal.ian.app.jogo_da_velha.domain.common.Properties.*;
+
 import java.util.Arrays;
 import java.util.List;
 
@@ -39,7 +40,11 @@ public class ServerSession {
 	
 
 	public ServerSession fill() {
-		this.data = Arrays.asList(Arrays.asList(-1,-1,-1),Arrays.asList(-1,-1,-1),Arrays.asList(-1,-1,-1));
+		this.data = Arrays.asList(
+							Arrays.asList(NOT_CHOSEN,NOT_CHOSEN,NOT_CHOSEN),
+							Arrays.asList(NOT_CHOSEN,NOT_CHOSEN,NOT_CHOSEN),
+							Arrays.asList(NOT_CHOSEN,NOT_CHOSEN,NOT_CHOSEN)
+						);
 		return this;
 	}
 	

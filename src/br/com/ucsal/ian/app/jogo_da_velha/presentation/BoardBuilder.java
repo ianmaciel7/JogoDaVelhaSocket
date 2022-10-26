@@ -2,7 +2,7 @@ package br.com.ucsal.ian.app.jogo_da_velha.presentation;
 
 import java.util.List;
 
-import br.com.ucsal.ian.app.jogo_da_velha.util.Properties;
+import br.com.ucsal.ian.app.jogo_da_velha.domain.common.Properties;
 
 public class BoardBuilder {
 	private StringBuilder builder;

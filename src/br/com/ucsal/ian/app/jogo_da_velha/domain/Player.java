@@ -1,15 +1,20 @@
 package br.com.ucsal.ian.app.jogo_da_velha.domain;
 
 import br.com.ucsal.ian.app.hosts.server.ServerThread;
-import br.com.ucsal.ian.app.jogo_da_velha.util.Action;
 
 public class Player {
 	
+	private int id;
 	private ServerThread serverThread;
 	
 
-	public Player(ServerThread st) {
+	public Player(int id,ServerThread st) {
 		this.serverThread = st;
+		this.id = id;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public void println(String msg) {

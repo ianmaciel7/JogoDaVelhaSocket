@@ -1,4 +1,4 @@
-package br.com.ucsal.ian.app.jogo_da_velha.util;
+package br.com.ucsal.ian.app.jogo_da_velha.domain;
 
 public enum Action {
 	DISABLE_KEYBOARD,

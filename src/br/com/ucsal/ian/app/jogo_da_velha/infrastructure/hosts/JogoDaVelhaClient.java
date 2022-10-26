@@ -1,11 +1,11 @@
-package br.com.ucsal.ian.app.jogo_da_velha.hosts;
+package br.com.ucsal.ian.app.jogo_da_velha.infrastructure.hosts;
 
 import java.io.IOException;
 import java.net.UnknownHostException;
 
 import br.com.ucsal.ian.app.hosts.client.Client;
-import br.com.ucsal.ian.app.jogo_da_velha.util.Action;
-import br.com.ucsal.ian.app.jogo_da_velha.util.Properties;
+import br.com.ucsal.ian.app.jogo_da_velha.domain.Action;
+import br.com.ucsal.ian.app.jogo_da_velha.domain.common.Properties;
 
 public class JogoDaVelhaClient extends Client {
 
