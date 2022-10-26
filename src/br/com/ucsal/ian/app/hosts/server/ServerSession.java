@@ -1,10 +1,10 @@
-package br.com.ucsal.ian.server;
+package br.com.ucsal.ian.app.hosts.server;
 
 import java.net.ServerSocket;
 import java.util.Arrays;
 import java.util.List;
 
-public class ServerRepository {
+public class ServerSession {
 
 	private List<List<Integer>> data;
 	
@@ -38,7 +38,7 @@ public class ServerRepository {
 	}
 	
 
-	public ServerRepository fill() {
+	public ServerSession fill() {
 		this.data = Arrays.asList(Arrays.asList(-1,-1,-1),Arrays.asList(-1,-1,-1),Arrays.asList(-1,-1,-1));
 		return this;
 	}

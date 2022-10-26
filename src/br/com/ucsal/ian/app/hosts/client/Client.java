@@ -1,4 +1,4 @@
-package br.com.ucsal.ian.client;
+package br.com.ucsal.ian.app.hosts.client;
 
 import java.io.BufferedReader;
 import java.io.Console;
@@ -6,45 +6,58 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.util.Scanner;
 
-public class Client {
+
+public abstract class Client implements Runnable {
 
 	private Socket socket;
 	private BufferedReader readerData;
 	private PrintWriter senderData;
 	private Scanner scanner;
+	protected String lastData;
+	private String host;
+	private int port;
 
-	public Client(Socket socket) {
+	public Client(String host,int port) throws UnknownHostException, IOException {
+		this.host = host;
+		this.port = port;
+	}
+	
+	@Override
+	public void run() {
 		try {
-			this.socket = socket;
-			readerData = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-			senderData = new PrintWriter(socket.getOutputStream(), true);
-			scanner = new Scanner(System.in);
+			this.socket = new Socket(host, port);
+			this.readerData = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			this.senderData = new PrintWriter(socket.getOutputStream(), true);
+			this.scanner = new Scanner(System.in);
+
 		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+	}
+	
+	public void send() {
+		sendDataToServerByKeyBoard();
+	}
+	
+	public void flushSystemIn() {
+		try {
+			System.in.read(new byte[System.in.available()]);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public void send(boolean canRead) {
-
-		try {
-			if (canRead) {
-				sendDataToServerByKeyBoard();
-			} else {
-				System.in.read(new byte[System.in.available()]);
-			}
-		} catch (Exception e) {
-
-		}
-
-	}
-
 	public String read() {
-
 		try {
 
 			String serverData = readDataFromServer();
+			this.lastData = serverData;
 			System.out.println(serverData);
 			return serverData;
 		} catch (Exception e) {
@@ -83,5 +96,4 @@ public class Client {
 		return null;
 
 	}
-
 }

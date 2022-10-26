@@ -1,8 +1,12 @@
-package br.com.ucsal.ian.app.jogo_da_velha;
+package br.com.ucsal.ian.app.jogo_da_velha.domain;
 
+import br.com.ucsal.ian.app.hosts.server.Server;
+import br.com.ucsal.ian.app.hosts.server.ServerThread;
+import br.com.ucsal.ian.app.jogo_da_velha.presentation.BoardBuilder;
+import br.com.ucsal.ian.app.jogo_da_velha.util.Action;
 import br.com.ucsal.ian.app.jogo_da_velha.util.Message;
-import br.com.ucsal.ian.server.ServerMain;
-import br.com.ucsal.ian.server.ServerThread;
+import br.com.ucsal.ian.app.jogo_da_velha.util.Properties;
+import br.com.ucsal.ian.app.jogo_da_velha.util.Turns;
 
 public class Turn {
 	
@@ -34,9 +38,9 @@ public class Turn {
 		String data=player1.read();
 		if(data != null) {	
 
-			ServerMain.setData(data, JogoDaVelha.PLAYER_1);
+			Server.setData(data, Properties.PLAYER_1);
 			this.whoseTurnIsIt = Turns.SECOND_PLAYERS_TURN;		
-			broadcastMessage(new BoardBuilder(ServerMain.getData()).toString());		
+			broadcastMessage(new BoardBuilder(Server.getData()).toString());		
 		}
 
 	}
@@ -56,8 +60,8 @@ public class Turn {
 		
 		if(data != null) {
 			this.whoseTurnIsIt = Turns.ENDED_TURN;
-			ServerMain.setData(data, JogoDaVelha.PLAYER_2);
-			broadcastMessage(new BoardBuilder(ServerMain.getData()).toString());
+			Server.setData(data, Properties.PLAYER_2);
+			broadcastMessage(new BoardBuilder(Server.getData()).toString());
 		}
 	}
 

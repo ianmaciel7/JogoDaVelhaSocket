@@ -1,4 +1,4 @@
-package br.com.ucsal.ian.server;
+package br.com.ucsal.ian.app.hosts.server;
 
 import java.io.BufferedReader;
 import java.io.IOException;

@@ -1,15 +1,24 @@
-package br.com.ucsal.ian.server;
+package br.com.ucsal.ian.app.hosts.server;
 
 import java.io.IOException;
 import java.net.Socket;
 
 public class ServerThread extends Thread {
 
+	private Runnable app;
 	private ServerHandler server;
 	private Socket socket;
 
+	public ServerThread(Socket socket,Runnable app) throws IOException {
+		super();
+		this.app = app;
+		this.socket = socket;
+		this.server = new ServerHandler(socket);
+	}
+	
 	public ServerThread(Socket socket) throws IOException {
 		super();
+		this.app = null;
 		this.socket = socket;
 		this.server = new ServerHandler(socket);
 	}
@@ -29,12 +38,7 @@ public class ServerThread extends Thread {
 	@Override
 	public void run() {
 		try {
-				
-				while (true) {
-					//this.server = new ServerHandler(socket);
-					//read();
-				}
-				
+			if(app != null) app.run();
 		} catch (Exception e) {			
 			e.printStackTrace();
 		}

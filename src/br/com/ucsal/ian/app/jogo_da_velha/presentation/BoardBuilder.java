@@ -1,6 +1,8 @@
-package br.com.ucsal.ian.app.jogo_da_velha;
+package br.com.ucsal.ian.app.jogo_da_velha.presentation;
 
 import java.util.List;
+
+import br.com.ucsal.ian.app.jogo_da_velha.util.Properties;
 
 public class BoardBuilder {
 	private StringBuilder builder;
@@ -45,10 +47,10 @@ public class BoardBuilder {
 	
 	private String getValue(int v) {
 		switch (v) {
-		case JogoDaVelha.PLAYER_1: {
+		case Properties.PLAYER_1: {
 			return "X";
 		}
-		case JogoDaVelha.PLAYER_2: {
+		case Properties.PLAYER_2: {
 			return "O";
 		}
 		default:

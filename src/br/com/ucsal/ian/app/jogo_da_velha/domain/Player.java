@@ -1,6 +1,7 @@
-package br.com.ucsal.ian.app.jogo_da_velha;
+package br.com.ucsal.ian.app.jogo_da_velha.domain;
 
-import br.com.ucsal.ian.server.ServerThread;
+import br.com.ucsal.ian.app.hosts.server.ServerThread;
+import br.com.ucsal.ian.app.jogo_da_velha.util.Action;
 
 public class Player {
 	
