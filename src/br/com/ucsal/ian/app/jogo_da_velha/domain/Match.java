@@ -9,7 +9,9 @@ import java.util.List;
 
 import br.com.ucsal.ian.app.hosts.server.Server;
 import br.com.ucsal.ian.app.hosts.server.ServerThread;
+import br.com.ucsal.ian.app.jogo_da_velha.domain.exceptions.InvalidChoiceException;
 import br.com.ucsal.ian.app.jogo_da_velha.domain.exceptions.TurnException;
+import br.com.ucsal.ian.app.jogo_da_velha.presentation.BoardBuilder;
 
 public class Match {
 
@@ -35,18 +37,20 @@ public class Match {
 
 	public void start() throws Exception {			
 			while (!this.stop) {
-				runningGame();	
+				broadcastMessage("\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n-----------------------------");
+				runningMatch();	
 				iterator++;
 			}
 			endgame();
 	}
 
-	private void runningGame() throws Exception {
+	private void runningMatch() throws Exception {
+		
+		
+		
 		if (!verifyIfSomeoneWon()) {
-			System.out.println("verify: " + verifyIfSomeoneWon());
 			boolean turnSuccess = turnSwitch(); 
 		}
-
 		
 		this.stop = initializationFlag && isDraw() || hasWinner();
 		this.initializationFlag = Boolean.TRUE;
@@ -54,17 +58,28 @@ public class Match {
 
 	private boolean turnSwitch() throws Exception {
 		
+		try {
+			switch (turn.getWhoseTurnIsIt()) {
+			case FIRST_PLAYER_TURN: {
+				return turn.firstPlayersTurn();
+			}
+			case SECOND_PLAYER_TURN: {
+				return turn.secondPlayersTurn();
+			}
+			case TRY_AGAIN_FIRST_PLAYER_TURN: {
+				return turn.tryAgainFirstPlayersTurn();
+			}
+			case TRY_AGAIN_SECOND_PLAYER_TURN: {
+				return turn.tryAgainSecondPlayersTurn();
+			}
+			default:
+				throw new TurnException(turn.getWhoseTurnIsIt());
+			}
+		} catch (InvalidChoiceException e) {
+			turn.tryAgain();
+			return false;	
+		}
 		
-		switch (turn.getWhoseTurnIsIt()) {
-		case FIRST_PLAYER_TURN: {
-			return turn.firstPlayersTurn();
-		}
-		case SECOND_PLAYER_TURN: {
-			return turn.secondPlayersTurn();
-		}
-		default:
-			throw new TurnException(turn.getWhoseTurnIsIt());
-		}
 	}
 
 	private void endgame() throws Exception {
@@ -190,6 +205,12 @@ public class Match {
 
 	public boolean isDraw() {
 		return Server.getData().stream().allMatch((r) -> r.stream().allMatch((c) -> c.equals(NOT_CHOSEN)));
+	}
+	
+	private void broadcastMessage(String msg) {	
+		player1.println(msg);
+		player2.println(msg);	
+		System.out.println(msg);
 	}
 
 }

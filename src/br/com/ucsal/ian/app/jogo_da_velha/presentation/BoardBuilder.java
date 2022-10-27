@@ -27,7 +27,7 @@ public class BoardBuilder {
 		String line2 = line(l2.get(0),l2.get(1),l2.get(2));
 		String line3 = line(l3.get(0),l3.get(1),l3.get(2));
 		
-		builder.append("\n\n\n\n\n\n-- JOGADAS -- \n" );
+		builder.append("-- JOGADAS -- \n" );
 		builder.append("  0   1   2 \n");
 		builder.append("0"+line1+"\n");
 		builder.append("1"+line2+"\n");

@@ -16,7 +16,7 @@ public class App implements Runnable {
 			boolean hasTwoPlayers = Server.threads.size() > 1;
 
 			if (hasTwoPlayers) {
-				startingGame();
+				startUp();
 			} else {
 				printWaitingForSecondPlayer();
 			}
@@ -26,7 +26,7 @@ public class App implements Runnable {
 		}
 	}
 
-	private void startingGame() throws Exception {
+	private void startUp() throws Exception {
 		ServerThread player1 = Server.threads.get(PLAYER_1);
 		ServerThread player2 = Server.threads.get(PLAYER_2);
 

@@ -4,6 +4,7 @@ import br.com.ucsal.ian.app.hosts.server.Server;
 import br.com.ucsal.ian.app.hosts.server.ServerThread;
 import br.com.ucsal.ian.app.jogo_da_velha.domain.common.Message;
 import br.com.ucsal.ian.app.jogo_da_velha.domain.common.Properties;
+import br.com.ucsal.ian.app.jogo_da_velha.domain.exceptions.InvalidChoiceException;
 import br.com.ucsal.ian.app.jogo_da_velha.presentation.BoardBuilder;
 
 public class Turn {
@@ -24,7 +25,6 @@ public class Turn {
 	
 	public boolean isInvalidChoice(String data) {
 		if(data.length() == 2) return true;
-		var a =data.split(",");
 		if(data.split(",").length == 1) return true;
 		
 		try {
@@ -42,29 +42,32 @@ public class Turn {
 			return true;
 		}
 	}
+	
+	public boolean tryAgainFirstPlayersTurn() throws InvalidChoiceException {
+		broadcastMessage("\n[Escolha inválida feita pelo primeiro jogador, tente novamente]");
+		return this.firstPlayersTurn();
+	}
 
-	public boolean firstPlayersTurn() {
-		
+	public boolean firstPlayersTurn() throws InvalidChoiceException {
+
 		player1.println(Message.YOUR_TURN); 		 	
 		player2.println(Message.WAIT_THE_FIRST_PLAYER);
 		
-		player1.action(Action.ENABLE_KEYBOARD);
-		player2.action(Action.DISABLE_KEYBOARD);
 		broadcastMessage(new BoardBuilder(Server.getData()).toString());
 		
+		player1.action(Action.ENABLE_KEYBOARD);
+		player2.action(Action.DISABLE_KEYBOARD);
+			
 		
-		String data=player1.read();
+		String data= player1.read();
 		
 		
 		if(data != null) {	
-			if(isInvalidChoice(data)) {
-				this.whoseTurnIsIt = Turns.FIRST_PLAYER_TURN;		
-				broadcastMessage("[Escolha inválida feita pelo primeiro jogador, tente novamente]");
-				return false;
+			if(isInvalidChoice(data)) {	
+				throw new InvalidChoiceException();
 			}else {
 				Server.setData(data, Properties.PLAYER_1);
-				this.whoseTurnIsIt = Turns.SECOND_PLAYER_TURN;		
-				broadcastMessage(new BoardBuilder(Server.getData()).toString());	
+				this.whoseTurnIsIt = Turns.SECOND_PLAYER_TURN;							
 				return true;
 			}		
 		}
@@ -72,25 +75,30 @@ public class Turn {
 
 	}
 	
-	public boolean secondPlayersTurn() {
+	public boolean tryAgainSecondPlayersTurn() throws InvalidChoiceException {
+		broadcastMessage("[Escolha inválida feita pelo segundo jogador, tente novamente]");
+		return this.secondPlayersTurn();
+	}
+	
+	public boolean secondPlayersTurn() throws InvalidChoiceException {
 
 		player2.println(Message.YOUR_TURN); 	
 		player1.println(Message.WAIT_THE_SECOND_PLAYER);
 		
+		broadcastMessage(new BoardBuilder(Server.getData()).toString());
+		
 		player2.action(Action.ENABLE_KEYBOARD);
 		player1.action(Action.DISABLE_KEYBOARD);
+		
 		
 		String data=player2.read();		
 		
 		if(data != null) {
 			if(isInvalidChoice(data)) {
-				this.whoseTurnIsIt = Turns.SECOND_PLAYER_TURN;		
-				broadcastMessage("[Escolha inválida feita pelo segundo jogador, tente novamente]");
-				return false;
+				throw new InvalidChoiceException();				
 			}else {
 				this.whoseTurnIsIt = Turns.FIRST_PLAYER_TURN;
 				Server.setData(data, Properties.PLAYER_2);
-				broadcastMessage(new BoardBuilder(Server.getData()).toString());
 				return true;
 			}
 		}
@@ -98,6 +106,7 @@ public class Turn {
 	}
 
 	public void endedTurn() {
+		
 		this.whoseTurnIsIt = Turns.FIRST_PLAYER_TURN;
 		System.out.println("[Turno finalizado]");	
 		player2.action(Action.DISABLE_KEYBOARD);
@@ -106,17 +115,23 @@ public class Turn {
 	}
 	
 	public void draw() {
+		
+		
 		broadcastMessage(Message.DRAW);
 		broadcastMessage(Message.ENDGAME);
+		broadcastMessage(new BoardBuilder(Server.getData()).toString());
 	}
 	
 	public void won(Player winner) throws Exception {	
+		
 		if(winner.getId() == Properties.PLAYER_1) {
 			broadcastMessage(Message.FIRST_PLAYER_WON);
 			broadcastMessage(Message.ENDGAME);
+			broadcastMessage(new BoardBuilder(Server.getData()).toString());
 		}else if(winner.getId() == Properties.PLAYER_2) {
 			broadcastMessage(Message.SECOND_PLAYER_WON);
 			broadcastMessage(Message.ENDGAME);
+			broadcastMessage(new BoardBuilder(Server.getData()).toString());
 		}else {
 			throw new Exception("player inválido ao ganhar");
 		}
@@ -127,5 +142,15 @@ public class Turn {
 		player2.println(msg);	
 		System.out.println(msg);
 	}
+
+	public void tryAgain()  {
+		
+		
+		this.whoseTurnIsIt = this.whoseTurnIsIt == Turns.FIRST_PLAYER_TURN ?  Turns.TRY_AGAIN_FIRST_PLAYER_TURN : Turns.TRY_AGAIN_SECOND_PLAYER_TURN;
+		
+		
+	}
+
+	
 
 }

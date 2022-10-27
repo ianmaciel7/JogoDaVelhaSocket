@@ -9,25 +9,48 @@ import br.com.ucsal.ian.app.jogo_da_velha.domain.common.Properties;
 
 public class JogoDaVelhaClient extends Client {
 
-	public JogoDaVelhaClient() throws UnknownHostException, IOException {
-		super(Properties.HOST,Properties.PORT);		
+	private boolean isKeyboardEnabled;
+
+	public JogoDaVelhaClient() throws UnknownHostException, IOException {	
+		super(Properties.HOST, Properties.PORT);
+		this.isKeyboardEnabled = false;
 	}
-	
+
 	@Override
 	public void run() {
-		super.run();				
-		while (true) {
-			String data = this.read();
-			if(data != null) this.send();
-		}
+		super.run();
+		
+		new Thread(() -> {
+			while (true) {
+				this.read();
+			}
+		}).start();
+		
+		new Thread(() -> {
+			while (true) {		
+				this.send();
+			}
+		}).start();
 	}
+	
+	
+	@Override
+	public String read() {
+		String data= super.read();
+		
+		if(Action.ENABLE_KEYBOARD.name().trim().equalsIgnoreCase(data.trim())) this.isKeyboardEnabled = true;
+		if(Action.DISABLE_KEYBOARD.name().trim().equalsIgnoreCase(data.trim())) this.isKeyboardEnabled = false;
+		
+		return data;
+	}
+
 	@Override
 	public void send() {
-		if (Action.ENABLE_KEYBOARD.name().trim().equalsIgnoreCase(this.lastData.trim())) {
+		if (this.isKeyboardEnabled) {	
 			super.send();
 		} else {
 			super.flushSystemIn();
 		}
 	}
-	
+
 }
