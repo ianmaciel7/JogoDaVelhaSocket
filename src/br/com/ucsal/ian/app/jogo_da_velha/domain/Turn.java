@@ -26,16 +26,17 @@ public class Turn {
 
 	public void firstPlayersTurn() {
 
+		
 		player1.println(Message.YOUR_TURN); 		 	
 		player2.println(Message.WAIT_THE_FIRST_PLAYER);
 		
 		player1.action(Action.ENABLE_KEYBOARD);
 		player2.action(Action.DISABLE_KEYBOARD);
+		broadcastMessage(new BoardBuilder(Server.getData()).toString());
 		
 		
 		String data=player1.read();
 		if(data != null) {	
-
 			Server.setData(data, Properties.PLAYER_1);
 			this.whoseTurnIsIt = Turns.SECOND_PLAYER_TURN;		
 			broadcastMessage(new BoardBuilder(Server.getData()).toString());		
@@ -44,9 +45,7 @@ public class Turn {
 	}
 	
 	public void secondPlayersTurn() {
-		
-		
-		
+
 		player2.println(Message.YOUR_TURN); 	
 		player1.println(Message.WAIT_THE_SECOND_PLAYER);
 		

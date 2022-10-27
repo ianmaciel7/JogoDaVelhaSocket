@@ -32,12 +32,10 @@ public class Match {
 	}
 
 	public void start() throws Exception {
-
 			while (!this.stop) {
 				runningGame();
 			}
 			endgame();
-		
 	}
 
 	private void runningGame() throws Exception {

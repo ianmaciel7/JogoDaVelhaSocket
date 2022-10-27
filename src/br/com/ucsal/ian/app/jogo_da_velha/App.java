@@ -21,8 +21,7 @@ public class App implements Runnable {
 				printWaitingForSecondPlayer();
 			}
 			
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
+		} catch (Exception e) {			
 			e.printStackTrace();
 		}
 	}
