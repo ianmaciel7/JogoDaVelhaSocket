@@ -20,6 +20,7 @@ public class Match {
 	private Boolean finish;
 	private Boolean stop;
 	private static Boolean initializationFlag;
+	private Integer iterator;
 
 	public Match(ServerThread player1, ServerThread player2) {
 		this.player1 = new Player(PLAYER_1, player1);
@@ -29,11 +30,13 @@ public class Match {
 		this.finish = false;
 		this.initializationFlag = false;
 		this.stop = false;
+		this.iterator = 0; 
 	}
 
-	public void start() throws Exception {
+	public void start() throws Exception {			
 			while (!this.stop) {
-				runningGame();
+				runningGame();	
+				iterator++;
 			}
 			endgame();
 	}
@@ -41,22 +44,23 @@ public class Match {
 	private void runningGame() throws Exception {
 		if (!verifyIfSomeoneWon()) {
 			System.out.println("verify: " + verifyIfSomeoneWon());
-			turnSwitch();
+			boolean turnSuccess = turnSwitch(); 
 		}
 
+		
 		this.stop = initializationFlag && isDraw() || hasWinner();
 		this.initializationFlag = Boolean.TRUE;
 	}
 
-	private void turnSwitch() throws Exception {
+	private boolean turnSwitch() throws Exception {
+		
+		
 		switch (turn.getWhoseTurnIsIt()) {
 		case FIRST_PLAYER_TURN: {
-			turn.firstPlayersTurn();
-			return;
+			return turn.firstPlayersTurn();
 		}
 		case SECOND_PLAYER_TURN: {
-			turn.secondPlayersTurn();
-			return;
+			return turn.secondPlayersTurn();
 		}
 		default:
 			throw new TurnException(turn.getWhoseTurnIsIt());

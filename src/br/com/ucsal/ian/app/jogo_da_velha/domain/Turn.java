@@ -12,8 +12,6 @@ public class Turn {
 	private static Player player2;	
 	public static Turns whoseTurnIsIt;
 	
-	
-
 	public Turn(Player player1, Player player2) {
 		super();
 		this.player1 = player1;
@@ -23,9 +21,29 @@ public class Turn {
 	public Turns getWhoseTurnIsIt() {
 		return this.whoseTurnIsIt;
 	}
+	
+	public boolean isInvalidChoice(String data) {
+		if(data.length() == 2) return true;
+		var a =data.split(",");
+		if(data.split(",").length == 1) return true;
+		
+		try {
+			Integer row = Integer.parseInt(String.valueOf(data.charAt(0)));
+			Integer column = Integer.parseInt(String.valueOf(data.charAt(2)));
+			
+			if(row > 2) return true;
+			if(column > 2) return true;
+			return false;
+			
+		} catch (StringIndexOutOfBoundsException e) {
+			return true;
+		}
+		catch (NumberFormatException e) {
+			return true;
+		}
+	}
 
-	public void firstPlayersTurn() {
-
+	public boolean firstPlayersTurn() {
 		
 		player1.println(Message.YOUR_TURN); 		 	
 		player2.println(Message.WAIT_THE_FIRST_PLAYER);
@@ -36,15 +54,25 @@ public class Turn {
 		
 		
 		String data=player1.read();
+		
+		
 		if(data != null) {	
-			Server.setData(data, Properties.PLAYER_1);
-			this.whoseTurnIsIt = Turns.SECOND_PLAYER_TURN;		
-			broadcastMessage(new BoardBuilder(Server.getData()).toString());		
+			if(isInvalidChoice(data)) {
+				this.whoseTurnIsIt = Turns.FIRST_PLAYER_TURN;		
+				broadcastMessage("[Escolha inválida feita pelo primeiro jogador, tente novamente]");
+				return false;
+			}else {
+				Server.setData(data, Properties.PLAYER_1);
+				this.whoseTurnIsIt = Turns.SECOND_PLAYER_TURN;		
+				broadcastMessage(new BoardBuilder(Server.getData()).toString());	
+				return true;
+			}		
 		}
+		return false;
 
 	}
 	
-	public void secondPlayersTurn() {
+	public boolean secondPlayersTurn() {
 
 		player2.println(Message.YOUR_TURN); 	
 		player1.println(Message.WAIT_THE_SECOND_PLAYER);
@@ -55,10 +83,18 @@ public class Turn {
 		String data=player2.read();		
 		
 		if(data != null) {
-			this.whoseTurnIsIt = Turns.FIRST_PLAYER_TURN;
-			Server.setData(data, Properties.PLAYER_2);
-			broadcastMessage(new BoardBuilder(Server.getData()).toString());
+			if(isInvalidChoice(data)) {
+				this.whoseTurnIsIt = Turns.SECOND_PLAYER_TURN;		
+				broadcastMessage("[Escolha inválida feita pelo segundo jogador, tente novamente]");
+				return false;
+			}else {
+				this.whoseTurnIsIt = Turns.FIRST_PLAYER_TURN;
+				Server.setData(data, Properties.PLAYER_2);
+				broadcastMessage(new BoardBuilder(Server.getData()).toString());
+				return true;
+			}
 		}
+		return false;
 	}
 
 	public void endedTurn() {
